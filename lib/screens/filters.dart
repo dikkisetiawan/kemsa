@@ -92,6 +92,11 @@ class _FiltersState extends State<Filters> {
     );
   }
 
+  ///
+  ///
+  ///
+  ///
+
   Column sliderRentangHarga() {
     RangeValues values = RangeValues(30, 70);
     RangeLabels labels = RangeLabels('1', "100");
