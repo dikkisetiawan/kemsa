@@ -1,5 +1,6 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:kemsa/widgets/date_time_picker_timeline.dart';
 import '../themes/light_color.dart';
 import '../themes/theme.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -12,142 +13,128 @@ class Filters extends StatefulWidget {
 }
 
 class _FiltersState extends State<Filters> {
-  final expandButton = [true, true, true, true];
-  final isChecked = <bool?>[false, false, false];
+  final headerTitle = [
+    'Jenis Salon & Spesialis',
+    'Rating',
+    'Rentang Harga',
+    'Waktu Ketersediaan'
+  ];
+  late final tileContent = [
+    checkboxJenisLayanan(),
+    selectRating(),
+    sliderRentangHarga(),
+    DateTimePickerTimeline()
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: LightColor.background,
       appBar: AppBar(
-        toolbarHeight: 100,
         backgroundColor: LightColor.background,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: AppTheme.h1Style,
-        title: Text('Filter'),
+        title: Text('Filter', style: TextStyle(color: LightColor.black)),
         actions: [
           IconButton(
-            padding: EdgeInsets.only(right: 20),
+            padding: EdgeInsets.only(right: 25),
             icon: Icon(Icons.close),
             color: LightColor.black,
             onPressed: () => {},
           )
         ],
       ),
-      body: SingleChildScrollView(
+      body: ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 25),
         physics: BouncingScrollPhysics(),
-        padding: AppTheme.padding,
-        child: ExpansionPanelList(
-            animationDuration: Duration(milliseconds: 500),
-            expansionCallback: (panelIndex, isExpanded) => setState(() {
-                  expandButton[panelIndex] = !isExpanded;
-                }),
-            dividerColor: Colors.grey,
-            expandedHeaderPadding: EdgeInsets.only(top: 5, bottom: 5),
-            children: [
-              //Checkbox Jenis Layanan
-              ExpansionPanel(
-                  canTapOnHeader: true,
-                  isExpanded: expandButton[0],
-                  headerBuilder: (context, isExpanded) => Text(
-                        'Jenis Salon & Spesialis',
-                        style: AppTheme.titleStyle,
-                      ),
-                  body: checkboxJenisLayanan()),
-              //Slider Rentang Harga
-              ExpansionPanel(
-                  canTapOnHeader: true,
-                  isExpanded: expandButton[1],
-                  headerBuilder: (context, isExpanded) => Text(
-                        'Rentang Harga',
-                        style: AppTheme.titleStyle,
-                      ),
-                  body: sliderRentangHarga()),
-              ExpansionPanel(
-                  canTapOnHeader: true,
-                  isExpanded: expandButton[2],
-                  headerBuilder: (context, isExpanded) => Text(
-                        'Rating',
-                        style: AppTheme.titleStyle,
-                      ),
-                  body: RatingBar(
-                    itemSize: 50,
-                    initialRating: 2,
-                    direction: Axis.horizontal,
-                    allowHalfRating: false,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    ratingWidget: RatingWidget(
-                        full: Icon(Icons.star_rate,
-                            color: LightColor.yellowColor),
-                        half: Icon(Icons.star_half_outlined,
-                            color: LightColor.yellowColor),
-                        empty: Icon(Icons.star_border,
-                            color: LightColor.yellowColor)),
-                    onRatingUpdate: (rating) {},
-                  ))
-            ]),
+        itemCount: tileContent.length,
+        itemBuilder: (context, index) => ExpansionTile(
+          initiallyExpanded: true,
+          maintainState: true,
+          childrenPadding: EdgeInsets.symmetric(vertical: 20),
+          title: Text(
+            headerTitle[index],
+            style: AppTheme.titleStyle,
+          ),
+          children: [
+            tileContent[index],
+          ],
+        ),
       ),
     );
   }
 
-  ///
-  ///
-  ///
-  ///
+  Widget selectRating() {
+    return RatingBar(
+      itemSize: 30,
+      initialRating: 2,
+      direction: Axis.horizontal,
+      allowHalfRating: false,
+      itemCount: 5,
+      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+      ratingWidget: RatingWidget(
+          full: Icon(Icons.star_rate, color: LightColor.yellowColor),
+          half: Icon(Icons.star_half_outlined, color: LightColor.yellowColor),
+          empty: Icon(Icons.star_border, color: LightColor.yellowColor)),
+      onRatingUpdate: (rating) {},
+    );
+  }
 
-  Column sliderRentangHarga() {
+  Widget sliderRentangHarga() {
     RangeValues values = RangeValues(30, 70);
     RangeLabels labels = RangeLabels('1', "100");
 
     return Column(
       children: [
-        Padding(
-          padding: AppTheme.padding,
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: LightColor.darkgrey,
-                            width: 3,
-                          ),
-                          borderRadius: BorderRadius.circular(10)),
-                      hintText: "Terendah",
-                      hintStyle: AppTheme.h4Style,
-                      prefixIcon: Icon(Icons.money_off_csred_outlined)),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ], // Only numbers can be entered
-                ),
+        Row(
+          children: [
+            Flexible(
+              flex: 2,
+              child: TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: LightColor.darkgrey,
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.circular(10)),
+                    hintText: "Terendah",
+                    hintStyle: AppTheme.h4Style,
+                    prefixIcon: Icon(
+                      Icons.money_off_csred_outlined,
+                      size: 20,
+                    )),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ], // Only numbers can be entered
               ),
-              Spacer(flex: 2),
-              Expanded(
-                flex: 1,
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: LightColor.darkgrey,
-                            width: 3,
-                          ),
-                          borderRadius: BorderRadius.circular(10)),
-                      hintText: "Tertinggi",
-                      hintStyle: AppTheme.h4Style,
-                      prefixIcon: Icon(Icons.money_off_csred_outlined)),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ], // Only numbers can be entered
-                ),
-              )
-            ],
-          ),
+            ),
+            Spacer(flex: 1),
+            Flexible(
+              flex: 2,
+              child: TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: LightColor.darkgrey,
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.circular(10)),
+                    hintText: "Tertinggi",
+                    hintStyle: AppTheme.h4Style,
+                    prefixIcon: Icon(
+                      Icons.money_off_csred_outlined,
+                      size: 20,
+                    )),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ], // Only numbers can be entered
+              ),
+            )
+          ],
         ),
         RangeSlider(
             activeColor: LightColor.semanticpink,
@@ -167,7 +154,8 @@ class _FiltersState extends State<Filters> {
     );
   }
 
-  Column checkboxJenisLayanan() {
+  Widget checkboxJenisLayanan() {
+    final isChecked = <bool?>[false, false, false];
     return Column(
       children: [
         CheckboxListTile(
