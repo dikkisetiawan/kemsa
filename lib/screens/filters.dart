@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kemsa/widgets/choicechip_category.dart';
 import '../widgets/date_time_picker_timeline.dart';
 import '../widgets/slider_rentang_harga.dart';
 import '../themes/light_color.dart';
@@ -14,16 +15,18 @@ class Filters extends StatefulWidget {
 
 class _FiltersState extends State<Filters> {
   final headerTitle = [
-    'Jenis Salon & Spesialis',
+    'Kategori',
     'Rating',
     'Rentang Harga',
-    'Waktu Ketersediaan'
+    'Waktu Ketersediaan',
+    'Jenis Salon & Spesialis'
   ];
   late final tileContent = [
-    checkboxJenisLayanan(),
+    ChoiceChipCategory(),
     selectRating(),
     SliderRentangHarga(),
-    DateTimePickerTimeline()
+    DateTimePickerTimeline(),
+    checkboxJenisLayanan()
   ];
 
   @override
