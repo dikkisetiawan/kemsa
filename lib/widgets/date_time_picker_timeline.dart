@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../themes/light_color.dart';
 import '../themes/theme.dart';
@@ -14,6 +16,7 @@ class _DateTimePickerTimelineState extends State<DateTimePickerTimeline> {
   int _selectedDay = 2;
   String _selectedHour = '13:30';
   ItemScrollController _scrollController = ItemScrollController();
+  bool isMinPrice = true;
 
   final _days = <dynamic>[
     [1, 'Fri'],
@@ -113,116 +116,147 @@ class _DateTimePickerTimelineState extends State<DateTimePickerTimeline> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(20),
-      padding: EdgeInsets.only(top: 20, bottom: 20, left: 20),
-      decoration: BoxDecoration(
-          border: Border.all(color: LightColor.lightGrey),
-          borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        children: [
-          Text('Pilih Tanggal', style: AppTheme.h3Style),
-          //Calendar Slider Button
-          Container(
-            height: 100,
-            margin: EdgeInsets.symmetric(vertical: 25),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _days.length,
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedDay = _days[index][0];
-                  });
-                },
-                child: AnimatedContainer(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  duration: Duration(milliseconds: 300),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: _selectedDay == _days[index][0]
-                        ? LightColor.semanticpink
-                        : LightColor.lightGrey,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _days[index][0].toString(),
-                        style: _selectedDay == _days[index][0]
-                            ? TextStyle(
-                                fontSize: 20, color: LightColor.background)
-                            : AppTheme.h3Style,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        _days[index][1],
-                        style: _selectedDay == _days[index][0]
-                            ? TextStyle(
-                                fontSize: 20, color: LightColor.background)
-                            : AppTheme.h3Style,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Text('Pilih Jam', style: AppTheme.h3Style),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 25),
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              border: Border.all(width: 1.5, color: Colors.grey.shade200),
-            ),
-            child: ScrollablePositionedList.builder(
-                itemScrollController: _scrollController,
-                scrollDirection: Axis.horizontal,
-                itemCount: _hours.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.only(top: 20, bottom: 20, left: 20),
+          decoration: BoxDecoration(
+              border: Border.all(color: LightColor.lightGrey),
+              borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Pilih Tanggal', style: AppTheme.h3Style),
+
+              //Calendar Slider Button
+              Container(
+                height: 120,
+                margin: EdgeInsets.symmetric(vertical: 25),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _days.length,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
                       setState(() {
-                        _selectedHour = _hours[index];
+                        _selectedDay = _days[index][0];
                       });
                     },
                     child: AnimatedContainer(
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       duration: Duration(milliseconds: 300),
-                      width: 100,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: _selectedHour == _hours[index]
-                            ? Colors.orange.shade100.withOpacity(0.5)
-                            : Colors.orange.withOpacity(0),
-                        border: Border.all(
-                          color: _selectedHour == _hours[index]
-                              ? Colors.orange
-                              : Colors.white.withOpacity(0),
-                          width: 1.5,
-                        ),
+                        color: _selectedDay == _days[index][0]
+                            ? LightColor.semanticpink
+                            : LightColor.lightGrey,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            _hours[index],
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500),
+                            _days[index][1],
+                            style: _selectedDay == _days[index][0]
+                                ? TextStyle(
+                                    fontSize: 20, color: LightColor.background)
+                                : AppTheme.h3Style,
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            _days[index][0].toString(),
+                            style: _selectedDay == _days[index][0]
+                                ? TextStyle(
+                                    fontSize: 20, color: LightColor.background)
+                                : AppTheme.h3Style,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Visibility(
+                              visible: isMinPrice,
+                              child: Text(
+                                Random().nextInt(200).toString(),
+                                style: _selectedDay == _days[index][0]
+                                    ? TextStyle(
+                                        fontSize: 16,
+                                        color: LightColor.background)
+                                    : AppTheme.h6Style,
+                              )),
                         ],
                       ),
                     ),
-                  );
-                }),
-          )
-        ],
-      ),
+                  ),
+                ),
+              ),
+              Text('Pilih Jam', style: AppTheme.h3Style),
+              //Time Buttons
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 25),
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  border: Border.all(width: 1.5, color: Colors.grey.shade200),
+                ),
+                child: ScrollablePositionedList.builder(
+                    itemScrollController: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _hours.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedHour = _hours[index];
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: _selectedHour == _hours[index]
+                                ? Colors.orange.shade100.withOpacity(0.5)
+                                : Colors.orange.withOpacity(0),
+                            border: Border.all(
+                              color: _selectedHour == _hours[index]
+                                  ? Colors.orange
+                                  : Colors.white.withOpacity(0),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                _hours[index],
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+              )
+            ],
+          ),
+        ),
+        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Text(
+            'Tampilkan Harga Termurah',
+            style: AppTheme.h5Style,
+          ),
+          Switch(
+              activeColor: LightColor.mainPink,
+              value: isMinPrice,
+              onChanged: (value) => setState(() {
+                    isMinPrice = value;
+                  }))
+        ])
+      ],
     );
   }
 }
