@@ -130,7 +130,7 @@ class _DateTimePickerTimelineState extends State<DateTimePickerTimeline> {
 
               //Calendar Slider Button
               Container(
-                height: 120,
+                height: 100,
                 margin: EdgeInsets.symmetric(vertical: 25),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -159,8 +159,8 @@ class _DateTimePickerTimelineState extends State<DateTimePickerTimeline> {
                             _days[index][1],
                             style: _selectedDay == _days[index][0]
                                 ? TextStyle(
-                                    fontSize: 20, color: LightColor.background)
-                                : AppTheme.h3Style,
+                                    fontSize: 16, color: LightColor.background)
+                                : AppTheme.h5Style,
                           ),
                           SizedBox(
                             height: 10,

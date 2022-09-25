@@ -49,7 +49,7 @@ class _FiltersState extends State<Filters> {
         ],
       ),
       body: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 25),
+        padding: EdgeInsets.only(bottom: 50),
         physics: BouncingScrollPhysics(),
         itemCount: tileContent.length,
         itemBuilder: (context, index) => ExpansionTile(
@@ -64,6 +64,15 @@ class _FiltersState extends State<Filters> {
             tileContent[index],
           ],
         ),
+      ),
+      floatingActionButton: Visibility(
+        visible: MediaQuery.of(context).viewInsets.bottom == 0,
+        maintainState: true,
+        maintainAnimation: true,
+        child: FloatingActionButton.extended(
+            onPressed: () {},
+            label: Text('Tampilkan x data', style: AppTheme.h3Style),
+            backgroundColor: LightColor.mainPink),
       ),
     );
   }

@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:kemsa/screens/market_list_view.dart';
 import '../themes/light_color.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../themes/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/explore_page.dart';
 import 'screens/filters.dart';
-import 'widgets/date_time_picker_timeline.dart';
 
 //https://stackoverflow.com/questions/59241566/flutter-onboarding-screen-only-one-time
 Future<void> main() async {
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: Filters(),
+      home: MarketListView(),
       //MainPage(), //arahkan ke class MainPage di bawah untuk persisten navigation bar
     );
   }
